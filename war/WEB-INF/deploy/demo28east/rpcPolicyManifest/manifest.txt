@@ -1,0 +1,3 @@
+# Module demo28east
+# RPC service class, partial path of RPC policy file
+com.demo.east.client.GreetingService, BEFEBD8DCEF9EB6B60D527D5AF30EE43.gwt.rpc
