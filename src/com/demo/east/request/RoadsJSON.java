@@ -20,8 +20,8 @@ public class RoadsJSON {
 			int kmzIndex = 0;
 			int incr=0;
 			
-			int leni = kmzPoints.size() / 100;
-			double lenf = (double)kmzPoints.size() / 100;
+			int leni = kmzPoints.size() / 50;
+			double lenf = (double)kmzPoints.size() / 50;
 			
 			if((lenf-leni) > 0){
 				leni++;
@@ -33,13 +33,13 @@ public class RoadsJSON {
 				for(int i = kmzIndex; i < kmzPoints.size(); i ++){
 					points = points + kmzPoints.get(i).getLatLong() + "|";
 					
-					if(incr == 99){
+					if(incr == 49){
 						incr = 0;
 						break;
-					}
+					}					
 					
 					kmzIndex++;
-					incr++;
+					incr++;					
 				}
 				
 				points = points.substring(0, points.length() - 1);
@@ -77,8 +77,8 @@ public class RoadsJSON {
 			int kmzIndex = 0;
 			int incr=0;
 			
-			int leni = snappedPoints.size() / 100;
-			double lenf = (double)snappedPoints.size() / 100;
+			int leni = snappedPoints.size() / 50;
+			double lenf = (double)snappedPoints.size() / 50;
 			
 			if((lenf-leni) > 0){
 				leni++;
@@ -90,7 +90,7 @@ public class RoadsJSON {
 				for(int i = kmzIndex; i < snappedPoints.size(); i ++){
 					placeIds = placeIds + "&placeId=" + snappedPoints.get(i).getPlaceId();
 					
-					if(incr == 99){
+					if(incr == 49){
 						incr = 0;
 						break;
 					}

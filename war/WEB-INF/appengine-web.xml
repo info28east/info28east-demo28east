@@ -28,28 +28,5 @@
 		data to the datastore: <async-session-persistence enabled="true" /> With 
 		this feature enabled, there is a very small chance your app will see stale 
 		session data. For details, see http://code.google.com/appengine/docs/java/config/appconfig.html#Enabling_Sessions -->
-
-	<!-- Configure Managed VM -->
-	<vm>true</vm>
-		
-		
-	<automatic-scaling>
-		<min-num-instances>2</min-num-instances>
-		<max-num-instances>10</max-num-instances>
-		<cool-down-period-sec>60</cool-down-period-sec>
-		<cpu-utilization>
-			<target-utilization>0.5</target-utilization>
-		</cpu-utilization>
-	</automatic-scaling>
 	
-	
-	<health-check>
-		<enable-health-check>true</enable-health-check>
-		<check-interval-sec>5</check-interval-sec>
-		<timeout-sec>4</timeout-sec>
-		<unhealthy-threshold>2</unhealthy-threshold>
-		<healthy-threshold>2</healthy-threshold>
-		<restart-threshold>60</restart-threshold>
-	</health-check>
-
 </appengine-web-app>

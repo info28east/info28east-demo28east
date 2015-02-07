@@ -29,6 +29,68 @@ import com.google.gson.Gson;
 @Path("/tracks")
 public class TrackDownloadService
 {	
+	
+	
+	@GET
+	@Path("/testvalues/{texttoreturn}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String TextResponseText(@PathParam("texttoreturn") String texttoreturn)throws Exception
+	{
+		return(texttoreturn);
+	}
+	
+	/*
+	@GET
+	@Path("/download/{fileID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String DownloadTrack(@PathParam("fileID") String fileID)throws Exception
+	{		
+		RequestMessage message = null;
+		Track track = new Track();
+		Gson gson = new Gson();
+		String returnJSON = "";
+		
+		try{
+			RoadsJSON roadsJson = new RoadsJSON();
+			KMLParser parser = new KMLParser();
+			KMZFile f = new KMZFile(fileID);
+			f.setFileID(fileID);
+			
+			String kml = f.DownloadKML();
+			ArrayList<TrackRecordingItem> recordingItems = parser.ParseKML(kml);
+			
+			message = roadsJson.GetSnappedJSon(recordingItems);
+			
+			if(message.getStatus().equals("OK")){
+				ArrayList<SnappedPoint[]> arrSnapped = (ArrayList<SnappedPoint[]>)message.getResponseObject();
+				
+		    	track.setArrSnappedPoints(arrSnapped);
+		    	track.setTrackRecordingItems(recordingItems);
+				
+		    	message = roadsJson.GetSpeedLimits(track.getSnappedPoints());
+		    	
+		    	ArrayList<SpeedLimit[]> arrTest = (ArrayList<SpeedLimit[]>)message.getResponseObject();
+		    	
+		    	track.setArrSpeedLimits(arrTest);
+			}	    	
+		}
+		catch(Exception exception){
+			System.out.println(exception.getMessage());
+		}
+		finally{
+			if(message.getStatus().equals("OK")){
+				returnJSON = gson.toJson(track.getTrackRecordingItems());
+			}
+			else if(message.getStatus().equals("ERROR"))
+			{
+				returnJSON = message.getStatus() + " : " + message.getRequestMessage() + "  ::::  " + message.getStatusMessage();
+			}
+		}
+		
+		return(returnJSON);
+	}*/
+	
+	
 	@GET
 	@Path("/download/{fileID}")
 	@Produces(MediaType.APPLICATION_JSON)

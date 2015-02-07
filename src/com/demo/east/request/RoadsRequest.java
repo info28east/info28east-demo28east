@@ -77,14 +77,17 @@ public class RoadsRequest {
 	    	conn.setRequestProperty("X-Custom-Header", "xxx");
 	    	conn.setRequestProperty("Content-Type", "application/json");
 	    	
+	    	requestMessage = requestMessage + "JUST BEFORE GetReponseCode()";
+	    		    		    	
+	    	
 			if (conn.getResponseCode() != 200) {
-				requestMessage = requestMessage + "Response Code : " + conn.getResponseCode();
+				requestMessage = requestMessage + "Response Code : 0 ";
 				
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
 			}
 			else if(conn.getResponseCode() == 200){
-								
+				
 				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 				
 				String output;
@@ -109,13 +112,20 @@ public class RoadsRequest {
 		}
 		catch(Exception exc){
 			
+			if(conn.getResponseMessage() != null){
+				requestMessage = requestMessage + "  :  Response message IS " + conn.getResponseMessage();
+			}
+			else{
+				requestMessage = requestMessage + "  :  Response message IS NULL  :  ";
+			}
+			
 			returnMessage.setStatus("ERROR");
 			returnMessage.setStatusMessage(exc.getMessage());
-			returnMessage.setRequestMessage(requestMessage + "====");
+			returnMessage.setRequestMessage(requestMessage + "  ====  ");
 		}
 		return(returnMessage);
 	}
-
+	
 	
 	
 	public RequestMessage RequestSpeedLImits(ArrayList<SnappedPoint> snappedPoints) throws Exception{
