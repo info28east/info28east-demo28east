@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #googleMap {
+            height: 100%;
+        }
+    </style>
+
+    <title>28East Tracks Demonstration</title>
+
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.17&client=gme-28eastcc&sensor=true&libraries=visualization,drawing"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi" ></script>
+    <script type="text/javascript" src="js/Observable.js"></script>
+    <script type="text/javascript" src="js/TrackChart.js"></script>
+    <script type="text/javascript" src="js/TrackModel.js" ></script>
+    <script type="text/javascript" src="js/TrackItem.js"></script>
+    <script type="text/javascript" src="js/GeomHelper.js"></script>
+    <script type="text/javascript" src="js/TrackResult.js"></script>
+    <script type="text/javascript" src="js/TrackSegment.js"></script>
+
+    <script>
+        var trackResult;
+        var trackModel;
+        var trackChart = new TrackChart();
+
+        function Initialise() {
+            try {                
+                var latlng = new google.maps.LatLng(-25.71816399764539, 28.223426342010498);
+                var myOptions = {
+                    zoom: 16,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+
+                map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
+                trackModel = new TrackModel(map);
+
+                var polyLineOpt = {
+                    strokeColor: "black",
+                    strokeWeight: 0,
+                    opacity: 0,
+                    visible: false,
+                    editable: false
+                };
+                
+                
+                trackModel.listen("markermouseover", function (observable, eventType, data) {
+                    document.getElementById("tdTestData").innerHTML = data[0].Speed() + " : " + data[1];
+                    trackChart.SetSelection(parseInt(data[1]));
+                });
+
+
+                trackChart.listen("chartselect", function (observable, eventType, data) {
+                    if (data != null) {
+                        trackModel.setMarkerVisibility(data.row);
+                    }                    
+                });
+
+
+                trackResult = trackModel.TrackRequest("0B9XAhrEjfi6hVzB3ZzNWRHV4UFU", function () {
+                    
+                    trackModel.ConstructTrack();
+                    var vertices = trackModel.TrackVertices();
+                    map.fitBounds(getPolyLineBounds(vertices));
+                    var segments = trackModel.getTrackResult().TrackSegments();
+                    
+                    trackChart.Data(segments, document.getElementById("chrt_elevation"));
+                    trackChart.SpeedData(segments, document.getElementById("chrt_speed"));
+                    
+                    document.getElementById("tdTotDistance").innerHTML = trackModel.getTrackResult().totalDistance + " <b>Km</b>";
+                    document.getElementById("tdTravelTime").innerHTML = trackModel.getTrackResult().travelTime;
+                    document.getElementById("tdAverageSpeed").innerHTML = trackModel.getTrackResult().avgSpeed + " <b>Km/h</b>";
+                    document.getElementById("tdStartTime").innerHTML = trackModel.getTrackResult().startTime;
+                    document.getElementById("tdEndTime").innerHTML = trackModel.getTrackResult().endTime;
+                    document.getElementById("tdMinSpeed").innerHTML = trackModel.getTrackResult().minSpeed + " <b>Km/h</b>";
+                    document.getElementById("tdMaxSpeed").innerHTML = trackModel.getTrackResult().maxSpeed + " <b>Km/h</b>";
+                    document.getElementById("tdSpeedViolations").innerHTML = trackModel.getTrackResult().totalViolations;
+                });
+            }
+            catch (e) {
+                alert(e.message);
+            }
+        }
+
+        $(document).ready(function () {
+            google.maps.event.addDomListener(window, 'load', Initialise);
+        });
+
+    </script>
+</head>
+<body>
+    <table style="width:100%; height:100%;" border="0">
+        <tr style="height:80%;">
+            <td>
+                <table>
+                    <tr>
+                        <td style="width:30%;" valign="top">
+                            <table style="width: 100%; height: 100px; font-family: sans-serif; color: gray; font-size: 12pt;" border="0">
+                                <tr>
+                                    <td style="width: 200px;"><b>Total Distance :</b></td>
+                                    <td id="tdTotDistance"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>Travel Time :</b></td>
+                                    <td id="tdTravelTime"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>Average Speed :</b></td>
+                                    <td id="tdAverageSpeed"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>Start Time :</b></td>
+                                    <td id="tdStartTime"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>End Time :</b></td>
+                                    <td id="tdEndTime"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>Min Speed :</b></td>
+                                    <td id="tdMinSpeed"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>Max Speed :</b></td>
+                                    <td id="tdMaxSpeed"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"><b>Speed Violations :</b></td>
+                                    <td id="tdSpeedViolations"></td>
+                                </tr>   
+                                <tr>
+                                    <td style="width: 100px;"><b>Test DATA :</b></td>
+                                    <td id="tdTestData"></td>
+                                </tr>                                
+                            </table>
+                        </td>
+                        <td style="width:70%;">
+                            <div id="googleMap">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr style="height:20%;">
+            <td valign="top">
+                <table border="0">
+                    <tr>
+                        <td style="width: 50%;">
+                            <div id="chrt_speed"></div>
+                        </td>
+                        <td style="width: 50%;">
+                            <div id="chrt_elevation"></div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

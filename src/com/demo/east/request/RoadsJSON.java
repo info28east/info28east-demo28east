@@ -5,13 +5,13 @@ import java.util.ArrayList;
 
 import com.demo.east.tracks.SnappedPoint;
 import com.demo.east.tracks.SpeedLimit;
-import com.demo.east.tracks.TrackRecordingItem;
+import com.demo.east.tracks.TrackPointItem;
 
 
 
 public class RoadsJSON {
 
-	public RequestMessage GetSnappedJSon(ArrayList<TrackRecordingItem> kmzPoints) throws Exception{
+	public RequestMessage GetSnappedJSon(ArrayList<TrackPointItem> kmzPoints) throws Exception{
 		RequestMessage message = null;
 		ArrayList<SnappedPoint[]> returnValue = new ArrayList<SnappedPoint[]>();
 		

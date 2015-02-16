@@ -11,16 +11,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import com.demo.east.tracks.TrackRecordingItem;
+import com.demo.east.tracks.TrackPointItem;
 
 
 
 public class KMLParser {
 	
 		
-	public ArrayList<TrackRecordingItem> ParseKML(String kml) throws Exception{
+	public ArrayList<TrackPointItem> ParseKML(String kml) throws Exception{
 		
-		ArrayList<TrackRecordingItem> returnList = new ArrayList<TrackRecordingItem>();
+		ArrayList<TrackPointItem> returnList = new ArrayList<TrackPointItem>();
 		
 		try{
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -37,7 +37,7 @@ public class KMLParser {
 			
 			for(int idx = 0; idx < listCoords.size(); idx++)
 			{
-				TrackRecordingItem item = new TrackRecordingItem();					
+				TrackPointItem item = new TrackPointItem();					
 				String coords[] = listCoords.get(idx).getTextContent().split(" ");
 				
 				item.setLatLong(coords[1] + "," + coords[0]);

@@ -6,18 +6,18 @@ import java.util.ArrayList;
 
 public class Track {
 	
-	private ArrayList<TrackRecordingItem> trackRecordingItems;
+	private ArrayList<TrackPointItem> trackRecordingItems;
 	private ArrayList<SnappedPoint[]> collArrSnappedPoints;
 	private ArrayList<SnappedPoint> collSnappedPoints;
 	private ArrayList<SpeedLimit[]> collArrSpeedLimits;
 	private ArrayList<SpeedLimit> collSpeedLimits;
 	
 	
-	public ArrayList<TrackRecordingItem> getTrackRecordingItems() {
+	public ArrayList<TrackPointItem> getTrackRecordingItems() {
 		return trackRecordingItems;
 	}
 	public void setTrackRecordingItems(
-			ArrayList<TrackRecordingItem> trackRecordingItems) {
+			ArrayList<TrackPointItem> trackRecordingItems) {
 		this.trackRecordingItems = trackRecordingItems;
 		IntegrateSnappedPoints();
 	}
@@ -92,7 +92,7 @@ public class Track {
 						int index=0;
 						for (SnappedPoint item : collSnappedPoints){
 							SpeedLimit speedLimit = collSpeedLimits.get(index);
-							TrackRecordingItem point = trackRecordingItems.get(index);
+							TrackPointItem point = trackRecordingItems.get(index);
 							point.setSpeedLimit(speedLimit.getSpeedLimit());							
 							index++;
 						}
@@ -114,7 +114,7 @@ public class Track {
 					ConcatSnappedPoints();
 					if(collSnappedPoints.size() == trackRecordingItems.size()){
 						int index=0;
-						for (TrackRecordingItem item : trackRecordingItems){
+						for (TrackPointItem item : trackRecordingItems){
 							SnappedPoint point = collSnappedPoints.get(index);
 							item.setSnappedLatLong(point.getLocation().getLatitude() + "," + point.getLocation().getLongitude());
 							item.setPlaceId(point.getPlaceId());

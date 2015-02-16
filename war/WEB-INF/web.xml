@@ -7,7 +7,7 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Demo28east.html</welcome-file>
+    <welcome-file>Index.html</welcome-file>
   </welcome-file-list>  
   
   	<servlet>

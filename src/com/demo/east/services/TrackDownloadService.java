@@ -20,7 +20,9 @@ import com.demo.east.request.RoadsJSON;
 import com.demo.east.tracks.SnappedPoint;
 import com.demo.east.tracks.SpeedLimit;
 import com.demo.east.tracks.Track;
-import com.demo.east.tracks.TrackRecordingItem;
+import com.demo.east.tracks.TrackPointItem;
+import com.demo.east.tracks.TrackResult;
+import com.demo.east.tracks.TrackSegmentBuilder;
 import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 import com.google.apphosting.api.ApiProxy;
@@ -39,58 +41,8 @@ public class TrackDownloadService
 		return(texttoreturn);
 	}
 	
-	/*
-	@GET
-	@Path("/download/{fileID}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String DownloadTrack(@PathParam("fileID") String fileID)throws Exception
-	{		
-		RequestMessage message = null;
-		Track track = new Track();
-		Gson gson = new Gson();
-		String returnJSON = "";
+
 		
-		try{
-			RoadsJSON roadsJson = new RoadsJSON();
-			KMLParser parser = new KMLParser();
-			KMZFile f = new KMZFile(fileID);
-			f.setFileID(fileID);
-			
-			String kml = f.DownloadKML();
-			ArrayList<TrackRecordingItem> recordingItems = parser.ParseKML(kml);
-			
-			message = roadsJson.GetSnappedJSon(recordingItems);
-			
-			if(message.getStatus().equals("OK")){
-				ArrayList<SnappedPoint[]> arrSnapped = (ArrayList<SnappedPoint[]>)message.getResponseObject();
-				
-		    	track.setArrSnappedPoints(arrSnapped);
-		    	track.setTrackRecordingItems(recordingItems);
-				
-		    	message = roadsJson.GetSpeedLimits(track.getSnappedPoints());
-		    	
-		    	ArrayList<SpeedLimit[]> arrTest = (ArrayList<SpeedLimit[]>)message.getResponseObject();
-		    	
-		    	track.setArrSpeedLimits(arrTest);
-			}	    	
-		}
-		catch(Exception exception){
-			System.out.println(exception.getMessage());
-		}
-		finally{
-			if(message.getStatus().equals("OK")){
-				returnJSON = gson.toJson(track.getTrackRecordingItems());
-			}
-			else if(message.getStatus().equals("ERROR"))
-			{
-				returnJSON = message.getStatus() + " : " + message.getRequestMessage() + "  ::::  " + message.getStatusMessage();
-			}
-		}
-		
-		return(returnJSON);
-	}*/
-	
-	
 	@GET
 	@Path("/download/{fileID}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -100,6 +52,8 @@ public class TrackDownloadService
 		Track track = new Track();
 		Gson gson = new Gson();
 		String returnJSON = "";
+		TrackSegmentBuilder segmentBuilder = null;
+		TrackResult requestResult = null;
 		
 		try{
 			RoadsJSON roadsJson = new RoadsJSON();
@@ -108,7 +62,7 @@ public class TrackDownloadService
 			f.setFileID(fileID);
 			
 			String kml = f.DownloadKML();
-			ArrayList<TrackRecordingItem> recordingItems = parser.ParseKML(kml);
+			ArrayList<TrackPointItem> recordingItems = parser.ParseKML(kml);
 			
 			message = roadsJson.GetSnappedJSon(recordingItems);
 			
@@ -123,6 +77,10 @@ public class TrackDownloadService
 		    	ArrayList<SpeedLimit[]> arrTest = (ArrayList<SpeedLimit[]>)message.getResponseObject();
 		    	
 		    	track.setArrSpeedLimits(arrTest);
+		    	
+		    	segmentBuilder = new TrackSegmentBuilder(track.getTrackRecordingItems());		    	
+		    	requestResult = new TrackResult();
+		    	requestResult.setResultSegments(segmentBuilder.getResultSegments());		    	
 			}	    	
 		}
 		catch(Exception exception){
@@ -130,7 +88,7 @@ public class TrackDownloadService
 		}
 		finally{
 			if(message.getStatus().equals("OK")){
-				returnJSON = gson.toJson(track.getTrackRecordingItems());
+				returnJSON = gson.toJson(requestResult);
 			}
 			else if(message.getStatus().equals("ERROR"))
 			{
