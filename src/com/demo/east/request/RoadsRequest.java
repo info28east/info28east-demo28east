@@ -70,8 +70,8 @@ public class RoadsRequest {
 		
 		try{
 			
-			urlReq = "https://www.googleapis.com/roads/v1/snapToRoads?path=" + URLEncoder.encode(pointsToRequest, "UTF-8") + "&key=" + URLEncoder.encode(apiKey, "UTF-8");
-			
+			urlReq = "https://roads.googleapis.com/v1/snapToRoads?path=" + URLEncoder.encode(pointsToRequest, "UTF-8") + "&key=" + URLEncoder.encode(apiKey, "UTF-8");
+						
 			URL urlObj = new URL(urlReq);						
 	    	conn = (HttpURLConnection) urlObj.openConnection();	
 	    	conn.setRequestProperty("X-Custom-Header", "xxx");
@@ -137,7 +137,7 @@ public class RoadsRequest {
 		RequestMessage returnMessage = new RequestMessage();
 		
 		try{
-			urlReq = "https://www.googleapis.com/roads/v1/speedLimits?key=" + apiKey + placeIdsToRequest;
+			urlReq = "https://roads.googleapis.com/v1/speedLimits?key=" + apiKey + placeIdsToRequest;
 			
 			requestMessage = "Before REQUEST :::: ";
 			

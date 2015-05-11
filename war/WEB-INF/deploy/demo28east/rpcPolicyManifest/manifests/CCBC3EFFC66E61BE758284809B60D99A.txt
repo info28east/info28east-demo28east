@@ -1,2 +1,0 @@
-serviceClass: com.demo.east.client.GreetingService
-path: BEFEBD8DCEF9EB6B60D527D5AF30EE43.gwt.rpc

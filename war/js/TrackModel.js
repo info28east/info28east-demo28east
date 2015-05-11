@@ -1,6 +1,7 @@
 ﻿
 function TrackModel(map) {
-
+	
+	this.xmlHttpRequest = new XMLHttpRequest();
     this.baseURL = "http://demo28east.appspot.com/rest/tracks/download/";
     this.trackResult = null;
     this.map = map;
@@ -12,6 +13,40 @@ function TrackModel(map) {
 }
 
 TrackModel.prototype = new Observable();
+
+
+
+TrackModel.prototype.KMZRequest = function (file, callback) {
+	var ref = this;
+	
+	try{
+		ref.xmlHttpRequest.onreadystatechange = ref.getReadyStateHandler(ref.xmlHttpRequest, callback);
+		ref.xmlHttpRequest.open("POST", "kmz", true);
+		ref.xmlHttpRequest.send(file);
+	}
+	catch(e){
+		
+	}
+}
+
+TrackModel.prototype.getReadyStateHandler = function(xmlHttpRequest, callback){
+	var ref = this;
+	
+	return function() {
+    	if (xmlHttpRequest.readyState == 4) {
+    		if (xmlHttpRequest.status == 200) {
+    			var returnJSON = xmlHttpRequest.responseText;
+    			var json = JSON.parse(returnJSON);
+    			ref.trackResult = new TrackResult(json);
+    			callback();    			
+   			} else {
+    			alert("Http error " + xmlHttpRequest.status + ":" + xmlHttpRequest.statusText);
+  			}		    	
+  		}
+  	};
+	
+}
+
 
 TrackModel.prototype.TrackRequest = function (trackID, callback) {    
     var ref = this;

@@ -20,6 +20,7 @@ TrackChart.prototype.Data = function (tracks, div) {
     var chart;
     var data;
     var i = 0;
+    ref = this;
 
     try{
         this.elevationChart = new google.visualization.AreaChart(div);
@@ -39,6 +40,7 @@ TrackChart.prototype.Data = function (tracks, div) {
         
         var options = {
             title: "Elevation",
+            colors: ["gray"],
             titleTextStyle: {
                 color: "gray",
                 fontName: "sans-serif",
@@ -71,10 +73,18 @@ TrackChart.prototype.Data = function (tracks, div) {
             },
             width: '400px',
             height: '200px',
-            areaOpacity: 0.6,
+            areaOpacity: 0.3,            
             lineWidth: 1
         };
         data.addRows(rows);
+
+        function selectHandler() {
+            var selectedItem = ref.elevationChart.getSelection()[0];
+            ref.SetSelection(selectedItem.row);
+            ref.fireEvent("chartselect", selectedItem);
+        }
+
+        google.visualization.events.addListener(ref.elevationChart, 'select', selectHandler);
 
         this.elevationChart.draw(data, options);
     }

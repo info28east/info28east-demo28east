@@ -3,9 +3,9 @@ package com.demo.east.request;
 public class RequestMessage 
 {
 	private Object responseObject;
-	private String status;
-	private String statusMessage;
-	private String requestMessage;
+	private String status = "";
+	private String statusMessage = "";
+	private String requestMessage = "";
 	
 	
 	public String getStatusMessage() {

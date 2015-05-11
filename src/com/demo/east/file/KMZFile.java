@@ -71,10 +71,7 @@ public class KMZFile
 			zis.closeEntry();
 			zis.close();
 						
-			returnString = output.toString();
-			
-			System.out.println(returnString);
-			
+			returnString = output.toString();						
 		}
 		catch(IOException exception){
 			throw exception;
