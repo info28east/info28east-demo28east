@@ -46,7 +46,7 @@ public class TrackSegmentBuilder {
 				{
 					TrackPointItem fromItem = this.trackPointItems.get(index);
 					TrackPointItem toItem = this.trackPointItems.get(index+1);
-								
+					
 					TrackSegmentItem segment = new TrackSegmentItem();
 					ResultSegment resultSegment = new ResultSegment();
 					
@@ -61,12 +61,15 @@ public class TrackSegmentBuilder {
 					
 					segment.setPointSnappedToLat(toItem.getSnappedLatLong().split(",")[0]);			
 					segment.setPointSnappedToLng(toItem.getSnappedLatLong().split(",")[1]);
-										
+					
 					Integer fromAlt = Integer.valueOf(String.valueOf(Math.round(Double.valueOf(fromItem.getElevation()))));
 					Integer toAlt = Integer.valueOf(String.valueOf(Math.round(Double.valueOf(toItem.getElevation()))));
 					
 					segment.setFromAltitude(fromAlt);
 					segment.setToAltitude(Integer.valueOf(toAlt));
+					
+					segment.setFromBearing(Integer.valueOf(fromItem.getBearing()));
+					segment.setToBearing(Integer.valueOf(toItem.getBearing()));
 					
 					resultSegment.setFromPointLatLng(segment.getPointFromLat() + "," + segment.getPointFromLng());
 					resultSegment.setToPointLatLng(segment.getPointToLat() + "," + segment.getPointToLng());
@@ -102,6 +105,9 @@ public class TrackSegmentBuilder {
 					resultSegment.setSpeedLimit(fromItem.getSpeedLimit());
 					resultSegment.setDistance(String.valueOf(segment.getDistance()));
 					resultSegment.setSpeed(String.valueOf(segment.getSpeed()));
+					
+					resultSegment.setFromBearing(segment.getFromBearing());
+					resultSegment.setToBearing(segment.getToBearing());
 					
 					this.segmentItems.add(segment);
 					this.resultSegments.add(resultSegment);

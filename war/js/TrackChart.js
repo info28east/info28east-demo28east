@@ -105,8 +105,8 @@ TrackChart.prototype.SpeedData = function (tracks, div) {
         data = new google.visualization.DataTable();
 
         data.addColumn('number', 'vertexindex');
-        data.addColumn('number', 'Speed');
-        data.addColumn('number', 'SpeedLimit');
+        data.addColumn('number', 'Actual Speed');
+        data.addColumn('number', 'Speed Limit');
 
         var rows = [];
 

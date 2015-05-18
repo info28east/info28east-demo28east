@@ -20,6 +20,8 @@ public class TrackSegmentItem {
 	private Date toDateTime;
 	private String fromToTime = "";
 	
+	private int fromBearing = 0;
+	private int toBearing = 0;
 	private Double distance = 0.0;
 	private Integer fromAltitude = 0;
 	private Integer toAltitude = 0;
@@ -129,5 +131,16 @@ public class TrackSegmentItem {
 	public void setDistance(Double distance) {
 		this.distance = distance;
 	}	
-	
+	public int getFromBearing(){
+		return fromBearing;
+	}
+	public void setFromBearing(int fromBearing){
+		this.fromBearing = fromBearing;
+	}
+	public int getToBearing(){
+		return toBearing;
+	}
+	public void setToBearing(int toBearing){
+		this.toBearing = toBearing;
+	}
 }

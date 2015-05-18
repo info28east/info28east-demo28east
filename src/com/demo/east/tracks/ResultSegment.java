@@ -16,9 +16,9 @@ public class ResultSegment {
 	private String speedLimit = "";
 	private String speed = "";
 	private String distance = "";
-	
-	
-	
+	private int fromBearing = 0;
+	private int toBearing = 0;
+		
 	public String getFromTime() {
 		return fromTime;
 	}
@@ -85,6 +85,16 @@ public class ResultSegment {
 	public void setDistance(String distance) {
 		this.distance = distance;
 	}
-		
-	
+	public int getFromBearing(){
+		return fromBearing;
+	}
+	public void setFromBearing(int fromBearing){
+		this.fromBearing = fromBearing;
+	}
+	public int getToBearing(){
+		return toBearing;
+	}
+	public void setToBearing(int toBearing){
+		this.toBearing = toBearing;
+	}
 }

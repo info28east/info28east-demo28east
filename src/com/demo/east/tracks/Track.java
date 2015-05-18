@@ -112,15 +112,17 @@ public class Track {
 			if(collArrSnappedPoints != null && trackRecordingItems != null){
 				if(collArrSnappedPoints.size() > 0 && trackRecordingItems.size() > 0){
 					ConcatSnappedPoints();
-					if(collSnappedPoints.size() == trackRecordingItems.size()){
+					if(collSnappedPoints.size() == trackRecordingItems.size() || collSnappedPoints.size() < trackRecordingItems.size()){
 						int index=0;
 						for (TrackPointItem item : trackRecordingItems){
-							SnappedPoint point = collSnappedPoints.get(index);
-							item.setSnappedLatLong(point.getLocation().getLatitude() + "," + point.getLocation().getLongitude());
-							item.setPlaceId(point.getPlaceId());
+							if(index < collSnappedPoints.size()){
+								SnappedPoint point = collSnappedPoints.get(index);
+								item.setSnappedLatLong(point.getLocation().getLatitude() + "," + point.getLocation().getLongitude());
+								item.setPlaceId(point.getPlaceId());
+							}
 							index++;
 						}
-					}					
+					}
 				}
 			}
 		}

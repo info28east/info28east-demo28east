@@ -10,12 +10,15 @@ function TrackSegment(segmentJson) {
     this.pointSnappedFromLng = parseFloat(segmentJson.fromSnappedLatLng.split(",")[1]);;
     this.pointSnappedToLat = parseFloat(segmentJson.toSnappedLatLng.split(",")[0]);
     this.pointSnappedToLng = parseFloat(segmentJson.toSnappedLatLng.split(",")[1]);
-	    	
-    //this.distance = "";
+	
     this.fromAltitude = segmentJson.fromAltitude;
     this.toAltitude = segmentJson.toAltitude;
+    
+    this.fromBearing = segmentJson.fromBearing;
+    this.toBearing = segmentJson.toBearing;
+    
     this.speed = segmentJson.speed;
-    this.speedLimit = segmentJson.speedLimit;
+    this.speedLimit = segmentJson.speedLimit;    
 }
 
 
@@ -81,3 +84,14 @@ TrackSegment.prototype.ToAltitude = function () {
 TrackSegment.prototype.Index = function () {
     return (this.pointSnappedFromLat.toString() + ":" + this.pointSnappedFromLng.toString());
 }
+
+
+
+TrackSegment.prototype.FromBearing = function () {
+    return (parseInt(this.fromBearing));
+}
+TrackSegment.prototype.ToBearing = function () {
+    return (parseInt(this.toBearing));
+}
+
+

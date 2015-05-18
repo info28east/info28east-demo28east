@@ -12,6 +12,8 @@ public class TrackPointItem {
 	private String snappedLatLong = "";
 	private String placeID = "";
 	private String speedLimit = "";
+	private String bearing = "";
+	
 	
 	public String getLatLong() {
 		return latLong;
@@ -34,6 +36,20 @@ public class TrackPointItem {
 	}
 	public void setSpeed(String speed) {
 		this.speed = speed;
+	}
+	
+	
+	public String getBearing(){
+		if (bearing == ""){
+			bearing = "0";
+		}
+		else{
+			bearing = bearing.split("\\.")[0];
+		}
+		return bearing;
+	}
+	public void setBearing(String bearing){
+		this.bearing = bearing;
 	}
 	
 	

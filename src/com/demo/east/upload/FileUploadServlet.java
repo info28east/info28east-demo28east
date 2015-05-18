@@ -115,12 +115,12 @@ public class FileUploadServlet extends HttpServlet {
 				    	
 				    	ArrayList<SpeedLimit[]> arrTest = (ArrayList<SpeedLimit[]>)message.getResponseObject();
 				    	
-				    	track.setArrSpeedLimits(arrTest);				    	
-				    	segmentBuilder = new TrackSegmentBuilder(track.getTrackRecordingItems());		    	
+				    	track.setArrSpeedLimits(arrTest);
+				    	segmentBuilder = new TrackSegmentBuilder(track.getTrackRecordingItems());
 				    	requestResult = new TrackResult();
 				    	requestResult.setResultSegments(segmentBuilder.getResultSegments());
 					}
-				}				
+				}
 			}
 		} 
 		catch (FileUploadException e) {

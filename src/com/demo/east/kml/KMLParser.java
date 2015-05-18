@@ -32,8 +32,8 @@ public class KMLParser {
 			KMLFactoryTEST kmlFact = new KMLFactoryTEST(doc);
 			ArrayList<Node> listCoords = kmlFact.FindNodes("gx:Track", "gx:coord");
 			ArrayList<Node> listTimeStamps = kmlFact.FindNodes("gx:Track", "when");
-			ArrayList<Node> listSpeed = kmlFact.FindNodes("gx:SimpleArrayData", "name='speed'", "gx:value");
-			ArrayList<Node> listAccuracy = kmlFact.FindNodes("gx:SimpleArrayData", "name='accuracy'", "gx:value");
+			ArrayList<Node> listBearing = kmlFact.FindNodes("gx:SimpleArrayData", "name='bearing'", "gx:value");
+			//ArrayList<Node> listAccuracy = kmlFact.FindNodes("gx:SimpleArrayData", "name='accuracy'", "gx:value");
 			
 			for(int idx = 0; idx < listCoords.size(); idx++)
 			{
@@ -43,9 +43,9 @@ public class KMLParser {
 				item.setLatLong(coords[1] + "," + coords[0]);
 				item.setElevation(coords[2]);
 				item.setTimeStamp(listTimeStamps.get(idx).getTextContent());
-				item.setSpeed(listSpeed.get(idx).getTextContent());
-				item.setAccuracy(listAccuracy.get(idx).getTextContent());
+				item.setBearing(listBearing.get(idx).getTextContent());
 				
+				//item.setAccuracy(listAccuracy.get(idx).getTextContent());
 				returnList.add(item);
 			}
 		}
