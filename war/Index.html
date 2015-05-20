@@ -20,8 +20,7 @@
 
     <title>28East Roads API Demo</title>
     <link rel="shortcut icon" href="images/favicon.ico">
-
-
+		
     <link rel="stylesheet" href="css/main.css" type="text/css" />
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.17&client=gme-28eastcc&sensor=true&libraries=visualization,drawing"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" ></script>
@@ -33,12 +32,14 @@
     <script type="text/javascript" src="js/GeomHelper.js"></script>
     <script type="text/javascript" src="js/TrackResult.js"></script>
     <script type="text/javascript" src="js/TrackSegment.js"></script>
-
+    <script type="text/javascript" src="js/StreetViewInfoWindow.js"></script>
+	
     <script>
         var trackResult;
         var trackModel;
         var trackChart = new TrackChart();
-
+		
+        
         function Initialise() {
             try {                
             	var mapStyles = [{ "featureType": "landscape", "stylers": [{ "saturation": -100 }, { "lightness": 65 }, { "visibility": "on" }] }, { "featureType": "poi", "stylers": [{ "saturation": -100 }, { "lightness": 51 }, { "visibility": "simplified" }] }, { "featureType": "road.highway", "stylers": [{ "saturation": -100 }, { "visibility": "simplified" }] }, { "featureType": "road.arterial", "stylers": [{ "saturation": -100 }, { "lightness": 30 }, { "visibility": "on" }] }, { "featureType": "road.local", "stylers": [{ "saturation": -100 }, { "lightness": 40 }, { "visibility": "on" }] }, { "featureType": "transit", "stylers": [{ "saturation": -100 }, { "visibility": "simplified" }] }, { "featureType": "administrative.province", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "labels", "stylers": [{ "visibility": "on" }, { "lightness": -25 }, { "saturation": -100 }] }, { "featureType": "water", "elementType": "geometry", "stylers": [{ "hue": "#ffff00" }, { "lightness": -25 }, { "saturation": -97 }] }];
@@ -53,14 +54,14 @@
                         mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
                     }
                 };
-
+				
                 map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
                 map.setOptions(mapStyles, mapStyles);
                 map.mapTypes.set('map_style', styledMap);
                 map.setMapTypeId('map_style');
-                                
+                
                 trackModel = new TrackModel(map);
-
+				
                 var polyLineOpt = {
                     strokeColor: "black",
                     strokeWeight: 0,
@@ -73,7 +74,20 @@
                 alert(e.message);
             }
         }
-	
+        
+        
+        function SimulateKMZ(){
+        	document.getElementById("mapArea").style.width = "50%";
+        	document.getElementById("svArea").style.width = "50%";
+        	
+        	var center = map.getCenter();
+        	google.maps.event.trigger(map, "resize");
+        	map.setCenter(center);
+			
+        	trackModel.SimulateTrack(trackChart);
+        }
+        
+		
         function GetTrackByID(){
         	
         	var trackID = document.getElementById("txtGDriveID").value;
@@ -96,6 +110,7 @@
             });
         }
         
+        
         function LoadByKMZ(){        	        	
 			document.getElementById("imgLoadKMZ").style.visibility = "visible";
 			
@@ -104,11 +119,26 @@
         	var data = new FormData();
             data.append('file', file);
         	
+            trackModel.listen("markermouseover", function (observable, eventType, data) {
+                document.getElementById("tdSpeed").innerHTML = data[0].Speed() + " Km/h";
+                trackChart.SetSelection(parseInt(data[1]));
+            });
+			
+            trackChart.listen("chartselect", function (observable, eventType, data) {
+                if (data != null) {
+                    trackModel.setMarkerVisibility(data.row);
+                }                    
+            });
+            
             trackResult = trackModel.KMZRequest(data, function () {
             	ContructTrack();
             	document.getElementById("imgLoadKMZ").style.visibility = "hidden";
+            	document.getElementById("imgPlayKMZ").style.visibility = "visible";
+            	document.getElementById("imgPlayKMZ").style.width = "32px";
+            	document.getElementById("imgPlayKMZ").style.height = "32px";
             });
         }
+        
         
         function ContructTrack(){
         	trackModel.ConstructTrack();
@@ -117,8 +147,9 @@
             var segments = trackModel.getTrackResult().TrackSegments();
             
             trackChart.Data(segments, document.getElementById("chrt_elevation"));
-            trackChart.SpeedData(segments, document.getElementById("chrt_speed"));
-            
+            trackChart.SpeedData(segments, document.getElementById("chrt_area_speed"));
+            trackChart.GaugeData(segments, document.getElementById("chrt_gauge_speed"));
+                        
             document.getElementById("tdTotDistance").innerHTML = trackModel.getTrackResult().totalDistance + " <b>Km</b>";
             document.getElementById("tdTravelTime").innerHTML = trackModel.getTrackResult().travelTime;
             document.getElementById("tdAverageSpeed").innerHTML = trackModel.getTrackResult().avgSpeed + " <b>Km/h</b>";
@@ -156,6 +187,9 @@
             						<td style="width: 20px;" align="left">
             							<img src="/images/load.gif" id="imgLoadGD" align="right" style="visibility: hidden;">
             						</td>
+            						<td colspan="3">
+            							<img src="images/play.png" id="imgPlayDrive" style="visibility: hidden; width: 0px; height: 0px;" onclick="" />
+            						</td>
             					</tr>
             				</table>
             			</td>
@@ -176,7 +210,10 @@
             						<td style="width: 20px;" align="left">
             							<img src="/images/load.gif" id="imgLoadKMZ" align="right" style="visibility: hidden;">
             						</td>
-            					</tr>
+            						<td colspan="3">
+            							<img src="images/play.png" id="imgPlayKMZ" style="visibility: hidden; width: 0px; height: 0px;" onclick="SimulateKMZ();" />
+            						</td>
+            					</tr>            					
             				</table>    				
             			</td>
             		</tr>            		
@@ -222,7 +259,11 @@
 					                <td style="width: 100px;">Speed :</td>
 					                <td id="tdSpeed"></td>
 					            </tr>
-					            
+					            <tr>
+					                <td colspan="2" style="width: 100px;">
+					                	<div id="chrt_gauge_speed"></div>
+					                </td>
+					            </tr>
 					        </table>
             			</td>
             		</tr>
@@ -231,12 +272,12 @@
             <td style="width:80%;">
                 <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td style="width:100%;">
+                        <td id="mapArea" style="width:100%;">
                             <div id="googleMap">
                             </div>
                         </td>
-                        <td style="width:0%;">
-                            <div id="streetView">
+                        <td id="svArea" style="width:0%;">
+                            <div id="streetView" style="width: 100%; height: 100%;">
                             </div>
                         </td>
                     </tr>
@@ -248,7 +289,7 @@
                 <table border="0">
                     <tr>
                         <td style="width: 50%;">
-                            <div id="chrt_speed"></div>
+                            <div id="chrt_area_speed"></div>
                         </td>
                         <td style="width: 50%;">
                             <div id="chrt_elevation"></div>
@@ -261,6 +302,6 @@
 	
     <b style="position:absolute; left: 45%; top: 1px; z-index: 2; font-family: Calibri; font-size: 24pt; background-color: white; width: 450px; text-align: center; border-style: solid; border-width: 1px; border-color: darkgrey;">Google Maps Roads API Demo</b>
     <img src="images/logo.png" style="position: absolute; right: 0px; bottom: 240px; z-index: 2;" /> 
-			
+		
 </body>
 </html>

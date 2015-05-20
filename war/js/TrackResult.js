@@ -19,7 +19,6 @@ function TrackResult(jsonResponse) {
         var trackSegment = new TrackSegment(segment);
         ref.trackSegments.push(trackSegment);
     });
-
 }
 
 TrackResult.prototype.KmzID = function(){

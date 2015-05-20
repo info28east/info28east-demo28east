@@ -1,11 +1,17 @@
 ﻿
 function TrackChart() {
     try {
+    	
         this.elevationChart = null;
         this.speedChart = null;
-
+        this.gaugeChart = null;
+        this.chartData = null;
+        this.tracks = null;
+        this.gaugeData = null;
+        this.gaugeOpions = null;
+        
         // Load the Visualization API and the piechart package.
-        google.load('visualization', '1.0', { 'packages': ['corechart'] });
+        google.load('visualization', '1.0', { 'packages': ['corechart','gauge'] });
 
         Observable.call(this);
     }
@@ -94,16 +100,46 @@ TrackChart.prototype.Data = function (tracks, div) {
 }
 
 
-TrackChart.prototype.SpeedData = function (tracks, div) {
+TrackChart.prototype.GaugeData = function (tracks, divGauge) {
+	var chart;
+    var data;
+    var i = 0;
+    
+    this.tracks = tracks;
+    
+    try{    	
+    	this.gaugeChart = new google.visualization.Gauge(divGauge);
+    	this.gaugeData = google.visualization.arrayToDataTable([
+    	  ['Label', 'Value'],
+		  ['Speed', 0],
+		]);
+	    
+    	this.gaugeOpions = {	    
+	    		width: 300, height: 300, max: 220,
+	            redFrom: 140, redTo: 220,
+	            yellowFrom:90, yellowTo: 130,
+	            minorTicks: 2
+	    };
+	    
+		this.gaugeChart.draw(this.gaugeData, this.gaugeOpions);
+    }
+    catch(e){
+    	alert(e.message);
+    }
+}
+
+
+TrackChart.prototype.SpeedData = function (tracks, divArea) {
     var chart;
     var data;
     var i = 0;
     var ref = this;
-
+    
     try {
-        this.speedChart = new google.visualization.AreaChart(div);
+    	
+        this.speedChart = new google.visualization.AreaChart(divArea);
         data = new google.visualization.DataTable();
-
+        
         data.addColumn('number', 'vertexindex');
         data.addColumn('number', 'Actual Speed');
         data.addColumn('number', 'Speed Limit');
@@ -155,7 +191,9 @@ TrackChart.prototype.SpeedData = function (tracks, div) {
             areaOpacity: 0.1,
             lineWidth: 1
         };
-
+        
+        
+        
         data.addRows(rows);
         
         function selectHandler() {
@@ -163,7 +201,7 @@ TrackChart.prototype.SpeedData = function (tracks, div) {
             ref.SetSelection(selectedItem.row);
             ref.fireEvent("chartselect", selectedItem);
         }
-
+        
         google.visualization.events.addListener(ref.speedChart, 'select', selectHandler);
         this.speedChart.draw(data, options);        
     }
@@ -175,7 +213,11 @@ TrackChart.prototype.SpeedData = function (tracks, div) {
 
 TrackChart.prototype.SetSelection = function (index) {
     try{
-        this.speedChart.setSelection([{ row: index, column: 1 }, { row: index, column: 2 }]);
+    	var track = this.tracks[index];
+        this.gaugeData.setValue(0, 1, Math.round(track.Speed()));
+        this.gaugeChart.draw(this.gaugeData, this.gaugeOpions);
+        
+    	this.speedChart.setSelection([{ row: index, column: 1 }, { row: index, column: 2 }]);
         this.elevationChart.setSelection([{ row: index, column: 1 }]);
     }
     catch (e) {
